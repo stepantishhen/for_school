@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, redirect, abort, request
 from flask_ngrok import run_with_ngrok
 from data.talons import Talons, Forms
@@ -65,5 +67,5 @@ def clear_talons():
 
 if __name__ == '__main__':
     db_session.global_init('db/talons.sqlite')
-    # app.run(port=8080, host='127.0.0.1', debug=True)
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
