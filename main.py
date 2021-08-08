@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'for-school-app-secret-key'
 apikey = '37f070dfe0bc1a5985c0e644059d7eb175b06f94fe6446233c03420585ad83dfacfa65e9acfb47c52b1a9'
 session = vk.Session(access_token=apikey)
-path_to_save = os.path.abspath('static\img')
+path_to_save = os.path.abspath('content')
 # run_with_ngrok(app)
 
 
