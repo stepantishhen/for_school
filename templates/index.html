@@ -32,18 +32,4 @@
         <button type="submit" class="btn btn-outline-primary center-block">Отправить</button>
     </div>
     </form>
-    <h1 class="mb-3">{{ text.capitalize() }}</h1>
-    <div class="row justify-content-center">
-        {% for i in files %}
-        <div class="col-md-6">
-            <div class="card">
-                <img src="static/img/{{ i }}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text mt-2"><small class="text-muted">Опубликовано {{ ts }}</small></p>
-                </div>
-            </div>
-            <br>
-        </div>
-        {% endfor %}
-    </div>
 {% endblock %}
