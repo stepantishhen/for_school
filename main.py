@@ -11,7 +11,6 @@ from werkzeug.utils import secure_filename
 from data.talons import Talons, Forms
 from data import db_session
 
-
 UPLOAD_FOLDER = 'content'
 
 try:
@@ -23,7 +22,18 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'for-school-app-secret-key'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
+
 # run_with_ngrok(app)
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
 
 
 @app.route('/', methods=["POST", "GET"])
