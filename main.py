@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from data.talons import Talons, Forms
 from data import db_session
 
+os.mkdir('content')
 UPLOAD_FOLDER = os.path.abspath('content')
 
 app = Flask(__name__)
