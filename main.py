@@ -86,7 +86,7 @@ def see_menu():
         i += 1
     images = os.listdir(UPLOAD_FOLDER)
     print(images)
-    return render_template('see_menu.html', images=images, UPLOAD_FOLDER=UPLOAD_FOLDER,
+    return render_template('see_menu.html', title='Посмотреть меню', images=images, UPLOAD_FOLDER=UPLOAD_FOLDER,
                            post_text=post_text, time=time)
 
 
