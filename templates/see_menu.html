@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="mb-3">{{ text }}</h1>
+<h1 class="mb-3">{{ post_text }}</h1>
     <div class="row justify-content-center">
-        {% for i in files %}
+        {% for i in images %}
         <div class="col-md-6">
             <div class="card">
-                <img src="content/{{ i }}" class="card-img-top" alt="...">
+                <img src="{{ UPLOAD_FOLDER }}/{{ i }}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <p class="card-text mt-2"><small class="text-muted">Опубликовано {{ ts }}</small></p>
+                    <p class="card-text mt-2"><small class="text-muted">Опубликовано {{ time }}</small></p>
                 </div>
             </div>
             <br>

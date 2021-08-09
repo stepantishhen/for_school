@@ -11,12 +11,18 @@ from werkzeug.utils import secure_filename
 from data.talons import Talons, Forms
 from data import db_session
 
-os.mkdir('content')
-UPLOAD_FOLDER = os.path.abspath('content')
+
+UPLOAD_FOLDER = 'content'
+
+try:
+    os.mkdir(UPLOAD_FOLDER)
+except FileExistsError:
+    pass
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'for-school-app-secret-key'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 # run_with_ngrok(app)
 
 
@@ -46,10 +52,28 @@ def see_menu():
     url = urlparse(request.url)
     req = f'https://oauth.vk.com/access_token?client_id=7921944&client_secret=YGiSOZTjRyp0vIHA61Uy&redirect_uri=https://for-school-rus.herokuapp.com/see_menu&{url.query}'
     access_token = requests.get(req).json()['access_token']
-    text, ts = getting_menu(access_token)
-    files = os.listdir(UPLOAD_FOLDER)
-    return render_template('see_menu.html', dir=UPLOAD_FOLDER, files=files,
-                           text=text, ts=ts)
+
+    session = vk.Session(access_token=access_token)
+    api = vk.API(session, timeout=60)
+    wall_content = api.wall.get(domain='fabrika_s_p', count=1, offset=1, v=5.131)
+
+    post_text = wall_content['items'][0]['text']
+    time = int(wall_content['items'][0]['date'])
+    time = datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
+
+    images_urls = []
+    for photo in wall_content['items'][0]['attachments']:
+        for sizes in photo['photo']['sizes']:
+            if sizes['type'] == 'w':
+                images_urls.append(sizes['url'])
+    i = 0
+    for img in images_urls:
+        with open(f"{UPLOAD_FOLDER}\qwerty{i}.jpg", 'wb') as file:
+            file.write(requests.get(img).content)
+        i += 1
+    images = os.listdir(UPLOAD_FOLDER)
+    return render_template('see_menu.html', images=images, UPLOAD_FOLDER=UPLOAD_FOLDER,
+                           post_text=post_text, time=time)
 
 
 @app.route('/content/<name>')
@@ -93,30 +117,13 @@ def clear_forms():
     return redirect('/add_form')
 
 
-def getting_menu(access_token):
-    session = vk.Session(access_token=access_token)
-    api = vk.API(session, timeout=60)
-    wall_content = api.wall.get(domain='fabrika_s_p', count=1, offset=1, v=5.131)
-
-    post_text = wall_content['items'][0]['text']
-    ts = int(wall_content['items'][0]['date'])
-    ts = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-
-    images_urls = []
-    for photo in wall_content['items'][0]['attachments']:
-        for sizes in photo['photo']['sizes']:
-            if sizes['type'] == 'w':
-                images_urls.append(sizes['url'])
-    i = 0
-    for img in images_urls:
-        with open(f"{UPLOAD_FOLDER}\qwerty{i}.jpg", 'wb') as file:
-            file.write(requests.get(img).content)
-        i += 1
-    return post_text, ts
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 if __name__ == '__main__':
     db_session.global_init('db/talons.sqlite')
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
-    # app.run()
+    # app.run(debug=True)
