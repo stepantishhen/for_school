@@ -71,7 +71,7 @@ def see_menu():
     print(images_urls)
     i = 0
     for img in images_urls:
-        with open(f"{UPLOAD_FOLDER}\qwerty{i}.jpg", 'wb') as file:
+        with open(f"{UPLOAD_FOLDER}/qwerty{i}.jpg", 'wb') as file:
             file.write(requests.get(img).content)
         i += 1
     images = os.listdir(UPLOAD_FOLDER)
