@@ -56,22 +56,26 @@ def see_menu():
     session = vk.Session(access_token=access_token)
     api = vk.API(session, timeout=60)
     wall_content = api.wall.get(domain='fabrika_s_p', count=1, offset=1, v=5.131)
+    print(wall_content)
 
     post_text = wall_content['items'][0]['text']
     time = int(wall_content['items'][0]['date'])
     time = datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
+    print(post_text, time)
 
     images_urls = []
     for photo in wall_content['items'][0]['attachments']:
         for sizes in photo['photo']['sizes']:
             if sizes['type'] == 'w':
                 images_urls.append(sizes['url'])
+    print(images_urls)
     i = 0
     for img in images_urls:
         with open(f"{UPLOAD_FOLDER}\qwerty{i}.jpg", 'wb') as file:
             file.write(requests.get(img).content)
         i += 1
     images = os.listdir(UPLOAD_FOLDER)
+    print(images)
     return render_template('see_menu.html', images=images, UPLOAD_FOLDER=UPLOAD_FOLDER,
                            post_text=post_text, time=time)
 
