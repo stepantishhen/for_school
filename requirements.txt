@@ -25,6 +25,7 @@ requests==2.26.0
 six==1.16.0
 soupsieve==2.2.1
 SQLAlchemy==1.4.18
+SQLAlchemy-serializer==1.4.1
 urllib3==1.26.6
 vk==2.0.2
 vk-api==11.9.4
