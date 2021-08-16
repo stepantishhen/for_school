@@ -1,13 +1,16 @@
 import datetime
 import sqlalchemy
+
+
 from .db_session import SqlAlchemyBase
 
 
-class Talons(SqlAlchemyBase):
+class Ticket(SqlAlchemyBase):
     __tablename__ = 'talons'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
+    school = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     form = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     milk = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     dinner = sqlalchemy.Column(sqlalchemy.String, nullable=True)
@@ -15,10 +18,3 @@ class Talons(SqlAlchemyBase):
     af_dinner = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now())
-
-
-class Forms(SqlAlchemyBase):
-    __tablename__ = 'forms'
-    id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
-    form = sqlalchemy.Column(sqlalchemy.String, nullable=True)

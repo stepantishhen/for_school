@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Регистрация</h1>
+<form method="post">
+    <label class="form-label">Название школы</label>
+    <input type="text" class="form-control mb-3" name="school" placeholder="Введите название">
+    <label class="form-label">Пароль</label>
+    <input type="password" class="form-control mb-3" name="password" placeholder="Введите пароль">
+    <label class="form-label">Подтвердите пароль</label>
+    <input type="password" class="form-control mb-3" name="check_password" placeholder="Подтвердите пароль">
+    <button type="submit" class="btn btn-outline-primary">Отправить на модерацию</button>
+</form>
+{% endblock %}

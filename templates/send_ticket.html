@@ -23,29 +23,41 @@
         }
     </script>
     <h1>{{ title }}</h1>
-    <form method="post">
-        <label class="form-label">Название школы</label>
-        <select class="form-select mb-3" id="blabla" onchange="get_value();" name="school">
+<form method="post">
+      <div class="mb-3">
+          <label class="form-label">Школа</label>
+          <select class="form-select" id="blabla" onchange="get_value();" name="school">
             <option selected>Выберите...</option>
             {% for i in schools %}
             <option>{{ i.school }}</option>
             {% endfor %}
-        </select>
-        <label class="form-label">Класс</label>
-        <select class="form-select mb-3" name="form" id="blabla2">
-            <option selected>Выберите...</option>
-        </select>
-        <label class="form-label">Молочный завтрак</label>
-        <input type="number" class="form-control mb-3" value="0" name="milk">
-        <label class="form-label">Обед</label>
-        <input type="number" class="form-control mb-3" value="0" name="dinner">
-        <label class="form-label">Малообеспеченные</label>
-        <input type="number" class="form-control mb-3" value="0" name="mal_ob">
+          </select>
+      </div>
         <div class="mb-3">
-            <label class="form-label">Полдник</label>
-            <input type="number" class="form-control" value="0" name="af_dinner">
-            <small class="text-muted">*если в позиции нет детей, оставить без изменений</small>
+          <label class="form-label">Класс</label>
+          <select class="form-select" name="form" id="blabla2">
+            <option selected>Выберите...</option>
+          </select>
         </div>
-        <button type="submit" class="btn btn-outline-primary">Отправить</button>
+    <div class="mb-3">
+        <label class="form-label">Молочный завтрак</label>
+        <input type="number" class="form-control" value="0" name="milk">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Обед</label>
+        <input type="number" class="form-control" value="0" name="dinner">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Малообеспеченные</label>
+        <input type="number" class="form-control" value="0" name="mal_ob">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Полдник</label>
+        <input type="number" class="form-control" value="0" name="af_dinner">
+        <small class="text-muted">*если в позиции нет детей, оставить без изменений</small>
+    </div>
+    <div class="d-flex justify-content-center mb-3">
+        <button type="submit" class="btn btn-outline-primary center-block">Отправить</button>
+    </div>
 </form>
 {% endblock %}

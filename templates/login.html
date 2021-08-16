@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post">
+    <h1>Вход</h1>
+    <label>Выберете школу</label>
+    <select class="form-select mb-3" name="school">
+        <option selected>Список школ...</option>
+        {% for i in schools %}
+            <option>{{ i.school }}</option>
+        {% endfor %}
+    </select>
+    <label>Введите пароль</label>
+    <input type="password" class="form-control mb-3" name="password" placeholder="Введите пароль">
+    <button type="submit" class="btn btn-outline-primary">Войти в профиль</button>
+</form>
+{% endblock %}
