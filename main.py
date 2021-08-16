@@ -21,6 +21,11 @@ try:
 except FileExistsError:
     pass
 
+try:
+    os.mkdir('db')
+except FileExistsError:
+    pass
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ticket-webapp'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -158,7 +163,7 @@ def see_menu():
                            post_text=post_text, time=time)
 
 
-@app.route('/content/<name>')
+@app.route('/content/<name>', methods=["POST", "GET"])
 def download_file(name):
     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
 
