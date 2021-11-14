@@ -5,20 +5,25 @@
       <tr>
         <th scope="col">Школа</th>
         <th scope="col">Статус</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Фамилия</th>
         <th scope="col">Подтвердить?</th>
       </tr>
     </thead>
     <tbody>
-      {% for t in all_school %}
+      {% for t in all_users %}
       <tr>
-        <th>{{ t.school }}</th>
+        <th>{{ t.username }}</th>
         <td>{{ t.status }}</td>
-        <td><a href="/sumbit_status/{{ t.school }}" class="btn btn-success">Да</a> <a href="/delete_school/{{ t.school }}" class="btn btn-danger">Нет</a></td>
+        <td>{{ t.first_name }}</td>
+        <td>{{ t.second_name }}</td>
+        <td><a href="/sumbit_status/{{ t.username }}" class="btn btn-success">Да</a> <a href="/delete_user/{{ t.id }}" class="btn btn-danger">Нет</a></td>
       </tr>
       {% endfor %}
     </tbody>
-  </table>
+</table>
 <div class="list-group">
-    <a href="/register_school" class="list-group-item list-group-item-action">Зарегистрировать школу</a>
+    <a href="/register/teacher" class="list-group-item list-group-item-action">Зарегистрировать учителя</a>
+    <a href="/register/school" class="list-group-item list-group-item-action">Зарегистрировать школу</a>
 </div>
 {% endblock %}

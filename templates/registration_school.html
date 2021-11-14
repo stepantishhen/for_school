@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Регистрация</h1>
+<form method="post">
+    <label class="form-label">Название школы</label>
+    <input type="text" class="form-control mb-3" name="school_name" placeholder="Название школы" required>
+    <label class="form-label">Логин</label>
+    <input type="text" class="form-control mb-3" name="username" placeholder="Придумайте логин" required>
+    <label class="form-label">Пароль</label>
+    <input type="password" class="form-control mb-3" name="password" placeholder="Введите пароль" required>
+    <label class="form-label">Подтвердите пароль</label>
+    <input type="password" class="form-control mb-3" name="check_password" placeholder="Подтвердите пароль" required>
+    <button type="submit" class="btn btn-outline-success">Зарегистрироваться</button>
+</form>
+{% if message %}
+<div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+{% endblock %}

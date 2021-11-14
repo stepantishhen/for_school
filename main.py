@@ -18,10 +18,6 @@ UPLOAD_FOLDER = 'content'
 
 try:
     os.mkdir(UPLOAD_FOLDER)
-except FileExistsError:
-    pass
-
-try:
     os.mkdir('db')
 except FileExistsError:
     pass
@@ -59,69 +55,87 @@ def logout():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    return render_template('index.html', title='Столовая')
+
+
+@app.route('/send_ticket', methods=['GET', 'POST'])
+def send_ticket():
     db_sess = db_session.create_session()
-    schools = db_sess.query(User).filter(User.status == 'ok')
+    schools = db_sess.query(User).filter(User.status == 'ok', User.role == 'school')
     ticket = Ticket()
     if request.method == 'POST':
         ticket.school = request.form.get('school')
-        ticket.form = request.form.get('form')
+        ticket.form_name = request.form.get('form_name')
         ticket.milk = request.form.get('milk')
         ticket.dinner = request.form.get('dinner')
-        ticket.mal_ob = request.form.get('mal_ob')
-        ticket.af_dinner = request.form.get('af_dinner')
+        ticket.low_income = request.form.get('low_income')
+        ticket.snack = request.form.get('snack')
         db_sess.add(ticket)
         db_sess.commit()
-        return redirect('/')
-    return render_template('index.html', title='Подача талона',
+        return redirect('/send_ticket')
+    return render_template('send_ticket.html', title='Подача талона',
                            schools=schools)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     db_sess = db_session.create_session()
-    schools = db_sess.query(User).filter(User.status == 'ok')
     if request.method == 'POST':
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.school == request.form.get('school'), User.status == 'ok').first()
+        user = db_sess.query(User).filter(User.username == request.form.get('username'), User.status == 'ok').first()
         if user and user.check_password(request.form.get('password')):
             login_user(user)
-            return redirect("/school_panel")
+            return redirect("/user_panel")
         return render_template('login.html', message="Неправильный логин или пароль")
-    return render_template('login.html', schools=schools)
+    return render_template('login.html', title='Вход')
 
 
-@app.route('/register_school', methods=['GET', 'POST'])
-def register_school():
-    if request.method == 'POST':
-        db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.school == request.form.get('school')).first():
-            return render_template('registration.html', message="Ты уже зареган")
-        elif request.form.get('password') != request.form.get('check_password'):
-            return render_template('registration.html', message="Не совпадают")
-        else:
-            user = User(school=request.form.get('school'), status='bad')
-            user.set_password(request.form.get('password'))
-            db_sess.add(user)
-            db_sess.commit()
-            return redirect('/')
-    return render_template('register_school.html')
-
-
-@app.route('/sumbit_status/<schoolname>', methods=['GET', 'POST'])
-def sumbit_status(schoolname):
+@app.route('/register/<role>', methods=['GET', 'POST'])
+def register(role):
     db_sess = db_session.create_session()
-    school = db_sess.query(User).filter(User.school == schoolname).first()
-    school.status = 'ok'
+    schools = db_sess.query(User).filter(User.status == 'ok', User.role == 'school')
+    if request.method == 'POST':
+        if db_sess.query(User).filter(User.username == request.form.get('username')).first():
+            return render_template(f'registration_{role}.html', message="Имя пользователя уже занято")
+        elif request.form.get('password') != request.form.get('check_password'):
+            return render_template(f'registration_{role}.html', message="Пароли не совпадают")
+        else:
+            if role == 'teacher':
+                user = User(username=request.form.get('username'), school_name=request.form.get('school'),
+                            role=role, first_name=request.form.get('first_name'), second_name=request.form.get('second_name'),
+                            form=request.form.get('form'))
+                user.set_password(request.form.get('password'))
+                db_sess.add(user)
+                db_sess.commit()
+            elif role == 'school':
+                user = User(username=request.form.get('username'), school_name=request.form.get('school_name'), role=role)
+                user.set_password(request.form.get('password'))
+                db_sess.add(user)
+                db_sess.commit()
+            return redirect('/')
+    return render_template(f'registration_{role}.html', schools=schools, title='Регистрация')
+
+
+@app.route('/sumbit_status/<username>', methods=['GET', 'POST'])
+def sumbit_status(username):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.username == username).first()
+    user.status = 'ok'
     db_sess.commit()
     return redirect('/admin')
 
 
-@app.route('/delete_school/<schoolname>', methods=['GET', 'POST'])
-def delete_school(schoolname):
+@app.route('/delete_user/<id>', methods=['GET', 'POST'])
+def delete_user(id):
     db_sess = db_session.create_session()
-    school = db_sess.query(User).filter(User.school == schoolname).first()
-    db_sess.delete(school)
-    db_sess.commit()
+    username = db_sess.query(User).get(id)
+    if username.role == 'teacher':
+        db_sess.delete(username)
+        db_sess.commit()
+    elif username.role == 'school':
+        db_sess.query(Ticket).filter(Ticket.school == username.school_name).delete()
+        db_sess.query(Form).filter(Form.school == username.school_name).delete()
+        db_sess.delete(username)
+        db_sess.commit()
     return redirect('/admin')
 
 
@@ -137,7 +151,7 @@ def get_len():
 @app.route('/see_menu', methods=["POST", "GET"])
 def see_menu():
     url = urlparse(request.url)
-    req = f'https://oauth.vk.com/access_token?client_id=7921944&client_secret=YGiSOZTjRyp0vIHA61Uy&redirect_uri=https://for-school-rus.herokuapp.com/see_menu&{url.query}'
+    req = f'https://oauth.vk.com/access_token?client_id=7921944&client_secret=YGiSOZTjRyp0vIHA61Uy&redirect_uri=https://for-school-rus.herokuapp.com/see_menu&{url.query}&scope=offline'
     access_token = requests.get(req).json()['access_token']
 
     session = vk.Session(access_token=access_token)
@@ -168,18 +182,22 @@ def download_file(name):
     return send_from_directory(app.config["UPLOAD_FOLDER"], name)
 
 
-@app.route('/school_panel', methods=["POST", "GET"])
-def school_panel():
+@app.route('/user_panel', methods=["POST", "GET"])
+def user_panel():
     db_sess = db_session.create_session()
-    all_tickets = db_sess.query(Ticket).filter(current_user.school == Ticket.school)
-    return render_template('school_panel.html', title='Общие данные', all_tickets=all_tickets)
+    all_tickets = None
+    if current_user.role == 'school':
+        all_tickets = db_sess.query(Ticket).filter(current_user.school_name == Ticket.school)
+    elif current_user.role == 'teacher':
+        all_tickets = db_sess.query(Ticket).filter(current_user.school_name == Ticket.school, current_user.form == Ticket.form_name)
+    return render_template('user_panel.html', title='Общие данные', all_tickets=all_tickets)
 
 
 @app.route('/admin', methods=["POST", "GET"])
 def admin():
     db_sess = db_session.create_session()
-    all_school = db_sess.query(User).all()
-    return render_template('admin.html', all_school=all_school)
+    all_users = db_sess.query(User).all()
+    return render_template('admin.html', all_users=all_users, title='Панель администратора')
 
 
 @app.route('/add_form', methods=["POST", "GET"])
@@ -188,32 +206,32 @@ def add_form():
     form = Form()
     if request.method == 'POST':
         form.form = request.form.get('form')
-        form.school = current_user.school
+        form.school = current_user.school_name
         db_sess.add(form)
         db_sess.commit()
         return redirect('/add_form')
-    all_forms = db_sess.query(Form).filter(Form.school == current_user.school)
-    return render_template('add_form.html', title='Общие данные', all_forms=all_forms)
+    all_forms = db_sess.query(Form).filter(Form.school == current_user.school_name)
+    return render_template('add_form.html', title='Добавление классов', all_forms=all_forms)
 
 
 @app.route('/clear_talons', methods=['GET', 'POST'])
 def clear_talons():
     db_sess = db_session.create_session()
-    db_sess.query(Ticket).filter(Ticket.school == current_user.school).delete()
+    db_sess.query(Ticket).filter(Ticket.school == current_user.school_name).delete()
     db_sess.commit()
-    return redirect('/school_panel')
+    return redirect('/user_panel')
 
 
 @app.route('/clear_forms', methods=['GET', 'POST'])
 def clear_forms():
     db_sess = db_session.create_session()
-    db_sess.query(Form).filter(Form.school == current_user.school).delete()
+    db_sess.query(Form).filter(Form.school == current_user.school_name).delete()
     db_sess.commit()
     return redirect('/add_form')
 
 
 if __name__ == '__main__':
     db_session.global_init('db/tickets.sqlite')
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-    # app.run(debug=True)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
