@@ -1,51 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-    <script>
-        function get_value() {
-            $.ajax({
-                type: "POST",
-                url: "/get_len",
-                data: $('form').serialize(),
-                type: 'POST',
-                success: function(response) {
-                    $('#blabla2').find('option').remove()
-                    var json = jQuery.parseJSON(response)
-                    $.each(json,function(key, value)
-                    {
-                        $("#blabla2").append('<option>' + value + '</option>');
-                    });
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-    </script>
-    <h1>{{ title }}</h1>
-    <form method="post">
-        <label class="form-label">Название школы</label>
-        <select class="form-select mb-3" id="blabla" onchange="get_value();" name="school">
-            <option selected>Выберите...</option>
-            {% for i in schools %}
-            <option>{{ i.school }}</option>
-            {% endfor %}
-        </select>
-        <label class="form-label">Класс</label>
-        <select class="form-select mb-3" name="form" id="blabla2">
-            <option selected>Выберите...</option>
-        </select>
-        <label class="form-label">Молочный завтрак</label>
-        <input type="number" class="form-control mb-3" value="0" name="milk">
-        <label class="form-label">Обед</label>
-        <input type="number" class="form-control mb-3" value="0" name="dinner">
-        <label class="form-label">Малообеспеченные</label>
-        <input type="number" class="form-control mb-3" value="0" name="mal_ob">
-        <div class="mb-3">
-            <label class="form-label">Полдник</label>
-            <input type="number" class="form-control" value="0" name="af_dinner">
-            <small class="text-muted">*если в позиции нет детей, оставить без изменений</small>
-        </div>
-        <button type="submit" class="btn btn-outline-primary">Отправить</button>
-</form>
-<br>
+<h1 class="text-center">
+    Приложение "Талончики"
+</h1>
+<p class="text-muted text-center">для электронной подачи талона на питание в школьной столовой</p>
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="static/img/2.jpg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="static/img/3.jpg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="static/img/1.jpg" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Предыдущий</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Следующий</span>
+  </button>
+</div>
 {% endblock %}

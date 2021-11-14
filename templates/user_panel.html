@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+{% if current_user.is_authenticated %}
+  {% if current_user.role == 'school' %}
+  <h1>{{ current_user.school_name }}</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Класс</th>
+        <th scope="col">Молоко</th>
+        <th scope="col">Обед</th>
+        <th scope="col">М/О</th>
+        <th scope="col">Полдник</th>
+        <th scope="col">Создано</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in all_tickets %}
+      <tr>
+        <th scope="row">{{ t.form_name }}</th>
+        <td>{{ t.milk }}</td>
+        <td>{{ t.dinner }}</td>
+        <td>{{ t.low_income }}</td>
+        <td>{{ t.snack }}</td>
+        <td>{{ t.created_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="list-group">
+    <a href="/add_form" class="list-group-item list-group-item-action">Добавить классы</a>
+    <a href="/clear_talons" class="list-group-item list-group-item-action">Удалить все талоны</a>
+    <a href="/logout" class="list-group-item list-group-item-action">Выйти из профиля</a>
+  </div>
+  {% elif current_user.role == 'teacher' %}
+  <h1>{{ current_user.first_name }} {{ current_user.second_name }}</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Молоко</th>
+        <th scope="col">Обед</th>
+        <th scope="col">М/О</th>
+        <th scope="col">Полдник</th>
+        <th scope="col">Создано</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in all_tickets %}
+      <tr>
+        <td>{{ t.milk }}</td>
+        <td>{{ t.dinner }}</td>
+        <td>{{ t.low_income }}</td>
+        <td>{{ t.snack }}</td>
+        <td>{{ t.created_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="list-group">
+    <a href="/logout" class="list-group-item list-group-item-action">Выйти из профиля</a>
+  </div>
+{% endif %}
+{% endblock %}

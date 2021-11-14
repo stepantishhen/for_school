@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-<form method="post">
+<form method="post" class="needs-validation" novalidate>
     <h1>Вход</h1>
-    <label>Выберете школу</label>
-    <select class="form-select mb-3" name="school">
-        <option selected>Список школ...</option>
-        {% for i in schools %}
-            <option>{{ i.school }}</option>
-        {% endfor %}
-    </select>
-    <label>Введите пароль</label>
-    <input type="password" class="form-control mb-3" name="password" placeholder="Введите пароль">
-    <button type="submit" class="btn btn-outline-primary">Войти в профиль</button>
+    <label>Логин</label>
+    <input id='floatingInputInvalid' type="text" class="form-control mb-3" name="username" placeholder="Введите логин" required>
+    <label>Пароль</label>
+    <input type="password" class="form-control mb-3" name="password" placeholder="Введите пароль" required>
+    <button type="submit" class="btn btn-outline-success">Войти в профиль</button>
 </form>
+{% if message %}
+<div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
 {% endblock %}
