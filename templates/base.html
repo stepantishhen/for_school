@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link type="image/png" sizes="16x16" rel="icon" href="static/img/money.png">
+    <link type="image/png" sizes="16x16" rel="icon" href="static/img/logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <title>{{ title }}</title>
@@ -13,8 +13,8 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
             <a class="navbar-brand" href="/">
-              <img src="/static/img/money.png" width="32" alt="">
-              Столовая
+              <img src="/static/img/logo.png" width="52" alt="">
+              Фабрика Социального Питания
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
@@ -24,6 +24,9 @@
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="/send_ticket">Подача талончика</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/magazine">Буфет</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">

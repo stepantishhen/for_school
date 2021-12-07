@@ -55,7 +55,7 @@ def logout():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', title='Столовая')
+    return render_template('index.html', title='Фабрика Социального Питания')
 
 
 @app.route('/send_ticket', methods=['GET', 'POST'])
@@ -230,8 +230,18 @@ def clear_forms():
     return redirect('/add_form')
 
 
+# @app.route('/magazine/<city>', methods=['GET', 'POST'])
+# def magazine(city):
+#     return render_template('magazine.html')
+#
+#
+# @app.route('/buy/<id>', methods=['GET', 'POST'])
+# def buy(id):
+#     pass
+
+
 if __name__ == '__main__':
     db_session.global_init('db/tickets.sqlite')
-    # port = int(os.environ.get("PORT", 5000))
-    # app.run(host='0.0.0.0', port=port)
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+    # app.run(debug=True)
