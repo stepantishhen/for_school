@@ -230,14 +230,14 @@ def clear_forms():
     return redirect('/add_form')
 
 
-@app.route('/magazine/<city>', methods=['GET', 'POST'])
-def magazine(city):
-    return render_template('magazine.html')
-
-
-@app.route('/buy/<id>', methods=['GET', 'POST'])
-def buy(id):
-    pass
+# @app.route('/magazine/<city>', methods=['GET', 'POST'])
+# def magazine(city):
+#     return render_template('magazine.html')
+#
+#
+# @app.route('/buy/<id>', methods=['GET', 'POST'])
+# def buy(id):
+#     pass
 
 
 if __name__ == '__main__':
