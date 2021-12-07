@@ -55,7 +55,7 @@ def logout():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', title='Столовая')
+    return render_template('index.html', title='Фабрика Социального Питания')
 
 
 @app.route('/send_ticket', methods=['GET', 'POST'])
@@ -228,6 +228,16 @@ def clear_forms():
     db_sess.query(Form).filter(Form.school == current_user.school_name).delete()
     db_sess.commit()
     return redirect('/add_form')
+
+
+@app.route('/magazine/<city>', methods=['GET', 'POST'])
+def magazine(city):
+    return render_template('magazine.html')
+
+
+@app.route('/buy/<id>', methods=['GET', 'POST'])
+def buy(id):
+    pass
 
 
 if __name__ == '__main__':
