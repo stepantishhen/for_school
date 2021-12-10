@@ -55,7 +55,7 @@ def logout():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', title='Фабрика Социального Питания')
+    return render_template('index.html', title='Талончики')
 
 
 @app.route('/send_ticket', methods=['GET', 'POST'])
