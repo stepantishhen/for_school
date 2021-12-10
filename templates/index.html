@@ -69,7 +69,76 @@
   </button>
 </div>
     <main class="flex-shrink-0">
-
+        <div class="container">
+            <br>
+            <h1 class="text-center mt-3">Для чего это приложение?</h1>
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="text-center">
+                        <img src="static/img/newspaper.svg" width="150" class="image-fluid center-block" alt="">
+                    </div>
+                    <h2 class="text-center">Замена бумажных талончиков</h2>
+                    <p class="text-center">Не придётся бегать из класса в столовую, выясняя где затерялся талон</p>
+                </div>
+                <div class="col">
+                    <div class="text-center">
+                        <img src="static/img/clipboard-data.svg" width="150" class="image-fluid" alt="">
+                    </div>
+                    <h2 class="text-center">Все данные в одном месте</h2>
+                    <p class="text-center">Личный кабинет учителя, сводная таблица для работников столовой - все для того, чтобы облегчить процесс подачи талона в столовых Белгородской области</p>
+                </div>
+                <div class="col">
+                    <div class="text-center">
+                        <img src="static/img/menu-up.svg" width="150" class="image-fluid" alt="">
+                    </div>
+                    <h2 class="text-center">Ежедневная публикация меню</h2>
+                    <p class="text-center">На основе данных из официальной группы Вконтакте Фабрика Социального питания в приложении можно моментально увидеть меню</p>
+                </div>
+            </div>
+            <br>
+            <h1 class="text-center mt-3">Как пользоваться?</h1>
+            <div class="row">
+                <div class="col">
+                    <div class="text-center">
+                        <img src="static/img/help.JPG" width="1000" class="image-fluid" alt="">
+                        <h3>Нужно пройти регистрацию, указав все свои достоверные данные</h3>
+                        <p>Примечание: доступ к личному кабинету школы доступен только после подтверждения</p>
+                        <a href="/register/teacher" class="btn btn-success">Для учителя</a>
+                        <a href="/register/school" class="btn btn-outline-success">Для школы</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h1 class="text-center mt-3">Обратная связь</h1>
+            <p class="text-center">по любым возникающим вопросам, проблемам</p>
+            <form action="#" method="post" class="probootstrap-form mb-5">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="fname">Имя</label>
+                        <input type="text" class="form-control" id="fname" name="fname">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="lname">Фамилия</label>
+                        <input type="text" class="form-control" id="lname" name="lname">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email">
+                  </div>
+                  <div class="form-group mb-4">
+                    <label for="message">Сообщение</label>
+                    <textarea cols="30" rows="10" class="form-control" id="message" name="message"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <input type="submit" class="btn btn-success" id="submit" name="submit" value="Отправить сообщение">
+                  </div>
+            </form>
+        </div>
     </main>
     <footer class="footer mt-auto py-3 bg-light">
       <div class="container p-4">

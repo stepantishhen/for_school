@@ -8,6 +8,8 @@ import vk
 
 from flask import Flask, render_template, redirect, request, send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_mail import Mail, Message
+from validate_email import validate_email
 
 from data import db_session
 from data.ticket import Ticket
@@ -27,6 +29,14 @@ app.config['SECRET_KEY'] = 'ticket-webapp'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 login_manager = LoginManager()
 login_manager.init_app(app)
+app.config['MAIL_SERVER'] = 'smtp.mail.ru'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'stepantishhen@mail.ru'  # введите свой адрес электронной почты здесь
+app.config['MAIL_DEFAULT_SENDER'] = 'stepantishhen@mail.ru'  # и здесь
+app.config['MAIL_PASSWORD'] = '3e3tp5jYmMRRkjG4FGRf'
+mail = Mail(app)
 # run_with_ngrok(app)
 
 
@@ -55,6 +65,18 @@ def logout():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == 'POST':
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        msg = Message(f'Отправитель: {fname} {lname}', sender='stepantishhen@mail.ru', recipients=['stepantishhen@mail.ru'])
+        msg.body = message + '\n' + 'Адрес отправителя:' + email
+        if validate_email(email):
+            mail.send(msg)
+            msg = Message('Ваше сообщение было успешно отправлено!', sender='stepantishhen@mail.ru', recipients=[email])
+            msg.body = 'Ваше сообщение было успешно отправлено!\n' + message
+            mail.send(msg)
     return render_template('index.html', title='Талончики')
 
 
