@@ -22,7 +22,7 @@
         <td>{{ t.dinner }}</td>
         <td>{{ t.low_income }}</td>
         <td>{{ t.snack }}</td>
-        <td>{{ t.created_date }}</td>
+        <td>{{ moment(t.created_date).format('LLL') }}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -33,7 +33,7 @@
     <a href="/logout" class="list-group-item list-group-item-action">Выйти из профиля</a>
   </div>
   {% elif current_user.role == 'teacher' %}
-  <h1>{{ current_user.first_name }} {{ current_user.second_name }}</h1>
+  <h1>{{ current_user.first_name }} {{ current_user.second_name }} - {{ current_user.form }}</h1>
   <table class="table">
     <thead>
       <tr>
@@ -51,12 +51,62 @@
         <td>{{ t.dinner }}</td>
         <td>{{ t.low_income }}</td>
         <td>{{ t.snack }}</td>
-        <td>{{ t.created_date }}</td>
+        <td>{{ moment(t.created_date).format('LLL') }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
   <div class="list-group">
+    <a href="/logout" class="list-group-item list-group-item-action">Выйти из профиля</a>
+  </div>
+  {% elif current_user.role == 'admin' %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Школа</th>
+        <th scope="col">Статус</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Фамилия</th>
+        <th scope="col">Подтвердить?</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in all_users %}
+      <tr>
+        <th>{{ t.username }}</th>
+        <td>{{ t.status }}</td>
+        <td>{{ t.first_name }}</td>
+        <td>{{ t.second_name }}</td>
+        <td><a href="/sumbit_status/{{ t.username }}" class="btn btn-success">Да</a> <a href="/delete_user/{{ t.id }}" class="btn btn-danger">Нет</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Молоко</th>
+        <th scope="col">Обед</th>
+        <th scope="col">М/О</th>
+        <th scope="col">Полдник</th>
+        <th scope="col">Создано</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in all_tickets %}
+      <tr>
+        <td>{{ t.milk }}</td>
+        <td>{{ t.dinner }}</td>
+        <td>{{ t.low_income }}</td>
+        <td>{{ t.snack }}</td>
+        <td>{{ moment(t.created_date).format('LLL') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="list-group">
+    <a href="/register/teacher" class="list-group-item list-group-item-action">Зарегистрировать учителя</a>
+    <a href="/register/school" class="list-group-item list-group-item-action">Зарегистрировать школу</a>
     <a href="/logout" class="list-group-item list-group-item-action">Выйти из профиля</a>
   </div>
   {% endif %}

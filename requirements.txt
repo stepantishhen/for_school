@@ -34,3 +34,5 @@ Whoosh==2.7.4
 WTForms==2.3.3
 flask_mail
 validate_email
+flask-moment
+
