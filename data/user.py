@@ -18,7 +18,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     first_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     second_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     form = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-
+    email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     school_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     def set_password(self, password):

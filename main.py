@@ -9,6 +9,7 @@ import vk
 from flask import Flask, render_template, redirect, request, send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_mail import Mail, Message
+from flask_moment import Moment
 from validate_email import validate_email
 
 from data import db_session
@@ -37,6 +38,8 @@ app.config['MAIL_USERNAME'] = 'stepantishhen@mail.ru'  # введите свой
 app.config['MAIL_DEFAULT_SENDER'] = 'stepantishhen@mail.ru'  # и здесь
 app.config['MAIL_PASSWORD'] = '3e3tp5jYmMRRkjG4FGRf'
 mail = Mail(app)
+moment = Moment(app)
+base_url = 'http://for-school-rus.herokuapp.com/'
 # run_with_ngrok(app)
 
 
@@ -86,8 +89,8 @@ def send_ticket():
     schools = db_sess.query(User).filter(User.status == 'ok', User.role == 'school')
     ticket = Ticket()
     if request.method == 'POST':
-        ticket.school = request.form.get('school')
-        ticket.form_name = request.form.get('form_name')
+        ticket.school = current_user.school_name
+        ticket.form_name = current_user.form
         ticket.milk = request.form.get('milk')
         ticket.dinner = request.form.get('dinner')
         ticket.low_income = request.form.get('low_income')
@@ -128,11 +131,27 @@ def register(role):
                 user.set_password(request.form.get('password'))
                 db_sess.add(user)
                 db_sess.commit()
+
+                email_to = request.form.get('email')
+                msg = Message(f'Подтверждение регистрации', sender='stepantishhen@mail.ru',
+                              recipients=[email_to])
+                msg.html = f"<a href='{base_url}/sumbit_status/{request.form.get('username')}'>Подтвердить регистрацию</a>"
+                if validate_email(email_to):
+                    mail.send(msg)
+                    mail.send(msg)
             elif role == 'school':
                 user = User(username=request.form.get('username'), school_name=request.form.get('school_name'), role=role)
                 user.set_password(request.form.get('password'))
                 db_sess.add(user)
                 db_sess.commit()
+
+                email_to = request.form.get('email')
+                msg = Message(f'Подтверждение регистрации', sender='stepantishhen@mail.ru',
+                              recipients=[email_to])
+                msg.html = f"<a href='{base_url}/sumbit_status/{request.form.get('username')}'>Подтвердить регистрацию</a>"
+                if validate_email(email_to):
+                    mail.send(msg)
+                    mail.send(msg)
             return redirect('/')
     return render_template(f'registration_{role}.html', schools=schools, title='Регистрация')
 
@@ -143,7 +162,7 @@ def sumbit_status(username):
     user = db_sess.query(User).filter(User.username == username).first()
     user.status = 'ok'
     db_sess.commit()
-    return redirect('/admin')
+    return redirect('/login')
 
 
 @app.route('/delete_user/<id>', methods=['GET', 'POST'])
@@ -158,7 +177,7 @@ def delete_user(id):
         db_sess.query(Form).filter(Form.school == username.school_name).delete()
         db_sess.delete(username)
         db_sess.commit()
-    return redirect('/admin')
+    return redirect('/user_panel')
 
 
 @app.route('/get_len', methods=['GET', 'POST'])
@@ -208,18 +227,22 @@ def download_file(name):
 def user_panel():
     db_sess = db_session.create_session()
     all_tickets = None
-    if current_user.role == 'school':
+    all_users = None
+    if current_user.role == 'admin':
+        all_tickets = db_sess.query(Ticket).all()
+        all_users = db_sess.query(User).all()
+    elif current_user.role == 'school':
         all_tickets = db_sess.query(Ticket).filter(current_user.school_name == Ticket.school)
     elif current_user.role == 'teacher':
         all_tickets = db_sess.query(Ticket).filter(current_user.school_name == Ticket.school, current_user.form == Ticket.form_name)
-    return render_template('user_panel.html', title='Общие данные', all_tickets=all_tickets)
+    return render_template('user_panel.html', title='Общие данные', all_tickets=all_tickets, all_users=all_users)
 
 
-@app.route('/admin', methods=["POST", "GET"])
-def admin():
-    db_sess = db_session.create_session()
-    all_users = db_sess.query(User).all()
-    return render_template('admin.html', all_users=all_users, title='Панель администратора')
+# @app.route('/admin', methods=["POST", "GET"])
+# def admin():
+#     db_sess = db_session.create_session()
+#     all_users = db_sess.query(User).all()
+#     return render_template('admin.html', all_users=all_users, title='Панель администратора')
 
 
 @app.route('/add_form', methods=["POST", "GET"])
@@ -260,6 +283,14 @@ def clear_forms():
 # @app.route('/buy/<id>', methods=['GET', 'POST'])
 # def buy(id):
 #     pass
+@app.route('/create_superuser', methods=["POST", "GET"])
+def create_superuser():
+    db_sess = db_session.create_session()
+    user = User(username='admin', status='ok', role='admin')
+    user.set_password('lyOvGQj7T4xv')
+    db_sess.add(user)
+    db_sess.commit()
+    return redirect('/')
 
 
 if __name__ == '__main__':
