@@ -200,7 +200,7 @@ def see_menu():
     wall_content = api.wall.get(domain='fabrika_s_p', count=1, offset=1, v=5.131)
     post_text = wall_content['items'][0]['text']
     time = int(wall_content['items'][0]['date'])
-    time = datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
+    time = datetime.utcfromtimestamp(time)
     images_urls = []
 
     for photo in wall_content['items'][0]['attachments']:

@@ -7,7 +7,7 @@
     <div class="card">
       <img src="{{ UPLOAD_FOLDER }}/{{ i }}" class="card-img-top" alt="...">
       <div class="card-body">
-        <p class="card-text mt-2"><small class="text-muted">Опубликовано {{ time }}</small></p>
+        <p class="card-text mt-2"><small class="text-muted">Опубликовано {{ moment(time).fromNow() }}</small></p>
       </div>
     </div>
     <br>
